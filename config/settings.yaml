@@ -1,0 +1,97 @@
+broker:
+  type: ibkr
+  host: 127.0.0.1
+  port: 7497              # paper: 7497, live: 7496
+  client_id: 1
+  contract:
+    symbol: NQ
+    exchange: CME
+    sec_type: FUT
+    expiry: "202406"
+
+# 세션 관리
+session:
+  market_open: "09:30"            # 미국장 개장 (ET)
+  trade_start_delay_min: 5        # 개장 후 5분 대기 → 09:35 거래 시작
+  trade_duration_min: 60          # 개장 후 60분 → 10:30 거래 종료
+  blackout_buffer_min: 5          # 지표 발표 전후 5분 블랙아웃
+  flatten_before_end_sec: 30      # 종료 30초 전 포지션 전체 청산
+  no_entry_last_min: 3            # 종료 3분 전 신규 진입 차단
+
+# 틱 차트
+tick_chart:
+  size: 500
+  pre_warm_threshold: 0.96
+
+  # 개장 직후(09:35~10:30)는 NQ 가장 활발한 구간
+  # 적응형으로 설정하되 min/max 범위를 좁게 유지
+  adaptive: true
+  adaptive_config:
+    target_bar_duration_sec: 15   # 개장 직후는 빠르므로 15초
+    min_ticks: 300                # 개장 직후 최소
+    max_ticks: 1500               # 지표 발표 직후 최대
+    smoothing: 0.15               # 개장 직후 변동 빠르므로 약간 높게
+
+# 전략
+strategy:
+  active: auto            # ai, breakout, composite, auto
+  min_confidence: 0.65
+
+  ai:
+    model_path: src/model/models/lgbm_nq_v1.pkl
+    pre_inference: true
+
+  breakout:
+    lookback_bars: 20
+    breakout_threshold: 5.0
+
+  composite:
+    strategies: [ai, breakout]
+    mode: weighted
+    weights:
+      ai: 0.7
+      breakout: 0.3
+    min_combined_score: 0.6
+
+  auto:
+    trending: ai
+    ranging: breakout
+    volatile: ai
+    quiet: _skip
+
+# 청산
+exit:
+  take_profit_points: 15
+  stop_loss_points: 10
+  trailing:
+    enabled: true
+    trigger_points: 8
+    offset_points: 4
+
+# 리스크 관리 (55분 윈도우에 맞춤)
+risk:
+  max_contracts: 2
+  max_daily_loss_usd: 200
+  max_consecutive_losses: 3
+  cooldown_minutes: 10            # 55분 윈도우이므로 10분 (30분이면 복귀 불가)
+
+# 데이터 저장
+data:
+  tick_dir: data/raw               # 실시간 틱 자동 저장 경로
+  bars_dir: data/bars              # 틱 차트 바 저장 경로
+
+# 경제지표
+economic_calendar:
+  file: config/economic_events.yaml
+  fetch_web: false                # true: 웹에서 자동 수집 (aiohttp 필요)
+
+logging:
+  level: INFO
+  file: logs/trading.log
+
+monitor:
+  heartbeat_interval_sec: 1
+  alert:
+    type: telegram
+    token: ""
+    chat_id: ""

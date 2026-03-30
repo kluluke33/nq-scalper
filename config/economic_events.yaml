@@ -1,0 +1,29 @@
+# 경제지표 발표 일정
+# 매주 일요일 또는 전일 밤에 해당 주의 일정을 업데이트
+#
+# 거래 시간 (09:35~10:30 ET) 내에 발표되는 지표만 등록하면 됨
+# 발표 전후 5분씩 (총 10분) 자동 블랙아웃
+#
+# impact: high (필수 등록), medium (권장), low (선택)
+#
+# 참고: https://www.investing.com/economic-calendar/
+
+events:
+  # 예시 — 실제 날짜로 교체하여 사용
+  # - date: "2024-06-03"
+  #   time: "10:00"
+  #   name: "ISM Manufacturing PMI"
+  #   impact: high
+  #
+  # - date: "2024-06-05"
+  #   time: "10:30"
+  #   name: "EIA Crude Oil Inventories"
+  #   impact: high
+  #
+  # 09:35~10:30 ET에 자주 발표되는 주요 지표:
+  #   10:00 — ISM Manufacturing/Services PMI
+  #   10:00 — Consumer Confidence
+  #   10:00 — New Home Sales
+  #   10:00 — JOLTS Job Openings
+  #   10:00 — Pending Home Sales
+  #   10:30 — EIA Crude Oil Inventories (수요일)

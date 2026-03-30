@@ -1,0 +1,27 @@
+# 데이터 (용량 크고 민감)
+data/
+
+# 모델 파일
+src/model/models/
+
+# 파이썬
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.python-version
+
+# 설정 (API 키 등)
+.env
+*.env
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# 임시
+tmp/
+*.log
