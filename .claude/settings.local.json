@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(ls /Users/kykim/things/kkk/data/raw/*.csv)",
-      "Bash(ls /Users/kykim/things/kkk/data/bars/*.csv)"
-    ]
-  }
-}

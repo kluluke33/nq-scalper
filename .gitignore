@@ -25,3 +25,7 @@ __pycache__/
 # 임시
 tmp/
 *.log
+
+# Claude 관련 파일 제외
+.claude/
+CLAUDE.md
